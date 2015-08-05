@@ -1,15 +1,15 @@
 #' 
-#' @title Wrapper for \code{proj4string()} function from spand rgdal packages
-#' @description This function is a wrapper for the proj4string() function from the
+#' @title Wrapper for \code{spTransform()} function from spand rgdal packages
+#' @description This function is a wrapper for the \code{spTransform()} function from the
 #' sp and rgdal packages
-#' @details See the \code{proj4string()} function from sp package for more details
+#' @details See the \code{spTransform()} function from sp package for more details
 #' @param x name of an object on the server side of class "SpatialPointsDataFrame" 
-#' or "SpatialPoints" to which the epsg coordinate system will be assigned
+#' or "SpatialPoints" for which the epsg coordinate system will be transformed
 #' @param projStr a valid proj4 epsg coordinate system identifier e.g. 29902 for
-#' Ireland. 
+#' Ireland. (N.B. need to add validation to check the id)
 #' @param newobj a character, the name of the new object which will be created
 #' If no name is specified the default name is the name of the original data frame 
-#' followed by the suffix '.proj'.
+#' followed by the suffix '.trans'.
 #' @param datasources a list of opal object(s) obtained after login in to opal servers;
 #' these objects hold also the data assign to R, as \code{dataframe}, from opal datasources.
 #' @return either an object of class SpatialPointsDataFrame or SpatialPoints, 
@@ -18,14 +18,14 @@
 #' @export
 #' @examples {
 #' 
-#' # Assign epsg coordinate system to a SpatialPointsDataFrame called mySPframe
-#' # The coordinate system 4326 is the code for WGS84 (GPS)
+#' # Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
+#' # The coordinate system 29902 is the code for Ireland
 #' 
-#' ds.proj4string('mySPframe',4326)
+#' ds.spTransform('mySPframe',29902)
 #' 
 #' }
 #' 
-ds.proj4string = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
+ds.spTransform = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
   
   # if no opal login details are provided look for 'opal' objects in the environment
   if(is.null(datasources)){
@@ -50,19 +50,21 @@ ds.proj4string = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
   
   # call the internal function that checks the input object is of the same class in all studies.
   typ <- checkClass(datasources, x)
+  print(typ)
   # if the input object is not a matrix or a dataframe stop
   if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints'){
     stop("The input vector must be of type 'SpatialPointsDataFrame'!", call.=FALSE)
   }
   
   if(is.null(newobj)){
-    newobj <- paste0(x,".proj")
+    newobj <- paste0(x,".trans")
   }
   
   # call the server side function and do the replacement for each server
   for(i in 1:length(datasources)){
-    message(paste0("--Assigning coordinate system to points object on ", names(datasources)[i], "..."))
-    cally <- paste0("proj4stringDS(", x,",",projStr,")")
+    message(paste0("--Transforming coordinate system on ", names(datasources)[i], "..."))
+    cally <- paste0("spTransformDS(", x,",",projStr,")")
+    print(cally)
     datashield.assign(datasources[i], newobj, as.symbol(cally))
     
     # check that the new object has been created and display a message accordingly
