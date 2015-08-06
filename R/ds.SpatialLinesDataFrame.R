@@ -1,8 +1,8 @@
 #' 
-#' @title Wrapper for \code{spTransform()} function from spand rgdal packages
-#' @description This function is a wrapper for the \code{spTransform()} function from the
-#' sp and rgdal packages
-#' @details See the \code{spTransform()} function from sp package for more details
+#' @title Wrapper for \code{SpatialLinesDataFrame()} function from sp package
+#' @description This function is a wrapper for the \code{SpatialLinesDataFrame()} function from the
+#' sp package
+#' @details See the \code{SpatialLinesDataFrame()} function from sp package for more details
 #' @param x name of an object on the server side of class "SpatialPointsDataFrame" 
 #' or "SpatialPoints" for which the epsg coordinate system will be transformed
 #' @param projStr a valid proj4 epsg coordinate system identifier e.g. 29902 for
@@ -25,45 +25,54 @@
 #' 
 #' }
 #' 
-ds.spTransform = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
+ds.SpatialLinesDataFrame = function(lines=NULL, data=NULL, newobj=NULL, datasources=NULL) {
   
   # if no opal login details are provided look for 'opal' objects in the environment
   if(is.null(datasources)){
     datasources <- findLoginObjects()
   }
   
-  if(is.null(x)){
-    stop("Please provide the name of a spatial points object!", call.=FALSE)
+  if(is.null(lines)){
+    stop("Please provide the name of a spatialLines object!", call.=FALSE)
   }
   
-  # check if a valid proj4 epsg coordinate system identifier string has been provided
-  if(is.null(projStr)){
-    stop("Please provide a a valid proj4 epsg coordinate system identifier!", call.=FALSE)
+  # check if a valid data frame has been provided
+  if(is.null(data)){
+    stop("Please provide a valid data frame!", call.=FALSE)
   }
   
-  if(!is.numeric(projStr)){
+  if(!is.numeric(data)){
     stop("Proj4 epsg coordinate system identifier is not a number!", call.=FALSE)
   }
   
   # check if the input object(s) is(are) defined in all the studies
-  defined <- isDefined(datasources, x)
+  defined_lines <- isDefined(datasources, lines)
+  defined_data <- isDefined(datasources, data)
   
   # call the internal function that checks the input object is of the same class in all studies.
-  typ <- checkClass(datasources, x)
+  typ <- checkClass(datasources, lines)
   
   # if the input object is not a matrix or a dataframe stop
-  if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints'){
-    stop("The input vector must be of type 'SpatialPointsDataFrame'!", call.=FALSE)
+  if(typ != 'SpatialLines'){
+    stop("The input 'lines' must be of type 'SpatialLines'!", call.=FALSE)
+  }
+  
+  # call the internal function that checks the input object is of the same class in all studies.
+  typ2 <- checkClass(datasources, data)
+  
+  # if the input object is not a matrix or a dataframe stop
+  if(typ2 != 'data.frame'){
+    stop("The input 'data' must be of type 'data.frame'!", call.=FALSE)
   }
   
   if(is.null(newobj)){
-    newobj <- paste0(x,".trans")
+    newobj <- paste0(x,".lines_df")
   }
   
   # call the server side function and do the replacement for each server
   for(i in 1:length(datasources)){
     message(paste0("--Transforming coordinate system on ", names(datasources)[i], "..."))
-    cally <- paste0("spTransformDS(", x,",",projStr,")")
+    cally <- paste0("spTransformDS(", lines,",",data,")")
     datashield.assign(datasources[i], newobj, as.symbol(cally))
     
     # check that the new object has been created and display a message accordingly
