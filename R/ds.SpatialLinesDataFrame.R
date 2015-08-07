@@ -41,10 +41,6 @@ ds.SpatialLinesDataFrame = function(lines=NULL, data=NULL, newobj=NULL, datasour
     stop("Please provide a valid data frame!", call.=FALSE)
   }
   
-  if(!is.numeric(data)){
-    stop("Proj4 epsg coordinate system identifier is not a number!", call.=FALSE)
-  }
-  
   # check if the input object(s) is(are) defined in all the studies
   defined_lines <- isDefined(datasources, lines)
   defined_data <- isDefined(datasources, data)
@@ -66,13 +62,14 @@ ds.SpatialLinesDataFrame = function(lines=NULL, data=NULL, newobj=NULL, datasour
   }
   
   if(is.null(newobj)){
-    newobj <- paste0(x,".lines_df")
+    newobj <- paste0(lines,".df")
   }
   
   # call the server side function and do the replacement for each server
   for(i in 1:length(datasources)){
     message(paste0("--Transforming coordinate system on ", names(datasources)[i], "..."))
-    cally <- paste0("spTransformDS(", lines,",",data,")")
+    cally <- paste0("SpatialLinesDataFrameDS(", lines,",",data,")")
+    print(cally)
     datashield.assign(datasources[i], newobj, as.symbol(cally))
     
     # check that the new object has been created and display a message accordingly

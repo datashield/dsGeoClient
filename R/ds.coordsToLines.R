@@ -9,6 +9,11 @@
 #' to a SpatialLinesDataFrame
 #' @param group string indicating the name of the column in the data frame that defines
 #' the grouping of the sets of points
+#' @param newobj a character, the name of the new object which will be created
+#' If no name is specified the default name is the name of the original data frame 
+#' followed by the suffix '.lines'.
+#' @param datasources a list of opal object(s) obtained after login in to opal servers;
+#' these objects hold also the data assign to R, as \code{dataframe}, from opal datasources.
 #' @return  an object of class SpatialLines, each line having an ID taken from the column
 #' specified by the group variable
 #' @author Bishop, T.
@@ -57,9 +62,9 @@ ds.coordsToLines = function(coords=NULL, group=NULL, newobj=NULL, datasources=NU
     newobj <- paste0(coords,".lines")
   }
   
-  # call the server side function and do the replacement for each server
+  # call the server side function and do the work for each server
   for(i in 1:length(datasources)){
-    message(paste0("--Transforming coordinate system on ", names(datasources)[i], "..."))
+    message(paste0("--Converting points to lines on ", names(datasources)[i], "..."))
     cally <- paste0("coordsToLinesDS(", coords,",'",group,"')")
     print(cally)
     datashield.assign(datasources[i], newobj, as.symbol(cally))

@@ -3,8 +3,7 @@
 #' @description This function is a wrapper for the proj4string() function from the
 #' sp and rgdal packages
 #' @details See the \code{proj4string()} function from sp package for more details
-#' @param x name of an object on the server side of class "SpatialPointsDataFrame" 
-#' or "SpatialPoints" to which the epsg coordinate system will be assigned
+#' @param x name of an object on the server side of spatial class to which the epsg coordinate system will be assigned
 #' @param projStr a valid proj4 epsg coordinate system identifier e.g. 29902 for
 #' Ireland. 
 #' @param newobj a character, the name of the new object which will be created
@@ -51,9 +50,9 @@ ds.proj4string = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
   # call the internal function that checks the input object is of the same class in all studies.
   typ <- checkClass(datasources, x)
   # if the input object is not a matrix or a dataframe stop
-  if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints'){
-    stop("The input vector must be of type 'SpatialPointsDataFrame'!", call.=FALSE)
-  }
+#   if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints'){
+#     stop("The input vector must be of type 'SpatialPointsDataFrame'!", call.=FALSE)
+#   }
   
   if(is.null(newobj)){
     newobj <- paste0(x,".proj")
