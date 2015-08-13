@@ -5,6 +5,6 @@ Version: 0.0.1
 License: GPL-3
 Title: DataSHIELD client side base functions
 Description: DataSHIELD client side base functions
-AggregateMethods: 
-AssignMethods: 
-Options: datashield.privacyLevel=5
+Depends:
+  opal,
+  dsBaseClient
