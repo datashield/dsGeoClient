@@ -45,6 +45,9 @@ ds.spTransform = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
     stop("Proj4 epsg coordinate system identifier is not a number!", call.=FALSE)
   }
   
+  # see the note in proj4Str function - might need to handle CRS objects not just
+  # numeric inputs
+  
   # check if the input object(s) is(are) defined in all the studies
   defined <- isDefined(datasources, x)
   

@@ -64,6 +64,23 @@ ds.coordinates = function(x=NULL, coords=NULL, newobj=NULL, datasources=NULL) {
     newobj <- paste0(x,".coords")
   }
   
+  #check whether the coordinates columns exist on the server side
+  for(i in 1:length(datasources)){
+    col_check <- unlist(ds.colnames(x,datasources[i]))
+    print(col_check)
+    print(all(is.element(coords,col_check)))
+    if(!(all(is.element(coords,col_check)))){
+      
+      stop("The column names specifying the coordinates are not found in
+           the target data frame!", call.=FALSE)
+      
+    }
+  }
+  
+  #need a check for whether the columns are numeric
+  
+  #need a check that there are more than 1 coordinate columns specified.
+  
   # call the server side function and do the replacement for each server
   for(i in 1:length(datasources)){
     message(paste0("--Converting ", names(datasources)[i], "data frame to coordinates object"))

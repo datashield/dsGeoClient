@@ -44,6 +44,18 @@ ds.proj4string = function(x=NULL, projStr=NULL, newobj=NULL, datasources=NULL) {
     stop("Proj4 epsg coordinate system identifier is not a number!", call.=FALSE)
   }
   
+  #could do away with this and split genuine CRS objects, and reconstruct on the other
+  # side - can't pass the + and = over DataSHIELD
+  # however it might require error checking on the client side that it is a valid
+  # CRS object....
+  
+  #projStrSplit <- gsub(" ","",unlist(strsplit(projStr, split="\\+")))
+  #projStrSplit <- do.call(rbind,strsplit(projStrSplit[-1], '\\='))
+  
+  #to rebuild on the server side
+  #paste(paste("+",paste(projStrSplit[,1],projStrSplit[,2],sep="="),sep=""),collapse=" ")
+  
+  
   # check if the input object(s) is(are) defined in all the studies
   defined <- isDefined(datasources, x)
   

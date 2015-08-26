@@ -11,7 +11,7 @@
 #' @param y layer from which the geometries or attributes are queried
 #' @param newobj a character, the name of the new object which will be created
 #' If no name is specified the default name is the name of the original data frame 
-#' followed by the suffix '.trans'.
+#' followed by the suffix '.over'.
 #' @param datasources a list of opal object(s) obtained after login in to opal servers;
 #' these objects hold also the data assign to R, as \code{dataframe}, from opal datasources.
 #' @return either an object of class SpatialPointsDataFrame or SpatialPoints, 

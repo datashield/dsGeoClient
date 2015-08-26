@@ -3,13 +3,14 @@
 #' @description This function is a wrapper for the \code{SpatialLinesDataFrame()} function from the
 #' sp package
 #' @details See the \code{SpatialLinesDataFrame()} function from sp package for more details
-#' @param x name of an object on the server side of class "SpatialPointsDataFrame" 
-#' or "SpatialPoints" for which the epsg coordinate system will be transformed
-#' @param projStr a valid proj4 epsg coordinate system identifier e.g. 29902 for
-#' Ireland. (N.B. need to add validation to check the id)
+#' @param lines name of a list of objects on the server side of class "SpatialLines" that 
+#' will be transformed in a SpatialLineDataFrame object
+#' @param data name of an object on the server side of class data frame that contains 
+#' the data that you wish to to attach to the lines. (N.B. need a row corresponding to
+#' each line object in the list)
 #' @param newobj a character, the name of the new object which will be created
 #' If no name is specified the default name is the name of the original data frame 
-#' followed by the suffix '.trans'.
+#' followed by the suffix '.df'.
 #' @param datasources a list of opal object(s) obtained after login in to opal servers;
 #' these objects hold also the data assign to R, as \code{dataframe}, from opal datasources.
 #' @return either an object of class SpatialPointsDataFrame or SpatialPoints, 
@@ -18,10 +19,6 @@
 #' @export
 #' @examples {
 #' 
-#' # Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
-#' # The coordinate system 29902 is the code for Ireland
-#' 
-#' ds.spTransform('mySPframe',29902)
 #' 
 #' }
 #' 

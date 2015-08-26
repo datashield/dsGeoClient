@@ -22,10 +22,6 @@
 #' @export
 #' @examples {
 #' 
-#' # Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
-#' # The coordinate system 29902 is the code for Ireland
-#' 
-#' ds.spTransform('mySPframe',29902)
 #' 
 #' }
 #' 
