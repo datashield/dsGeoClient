@@ -3,8 +3,7 @@
 #' @description This function is a wrapper for the \code{gBuffer()} function from the
 #' sp and rgeos packages
 #' @details See the \code{gBuffer()} function from rgeos package for more details
-#' @param input name of an object on the server side of class "SpatialLinesDataFrame" 
-#' or "SpatialLines" to which the buffer will be applied
+#' @param input name of a spatial object on the server side to which the buffer will be applied
 #' @param by_id Logical determining if the function should be applied across subgeometries 
 #' (TRUE) or the entire object (FALSE)
 #' @param ip_width Distance from original geometry to include in the new geometry. 
@@ -22,6 +21,10 @@
 #' @export
 #' @examples {
 #' 
+#' # Set a buffer of 150 around points contained in the bus_work object
+#' # Buffer is created per id in the bus_work object
+#' 
+#' ds.gBuffer('bus_work',by_id=T,ip_width=150,'bus_work_buff')
 #' 
 #' }
 #' 
@@ -50,10 +53,12 @@ ds.gBuffer = function(input=NULL, by_id=FALSE, ip_width=NULL, newobj=NULL, datas
   
   # call the internal function that checks the input object is of the same class in all studies.
   typ <- checkClass(datasources, input)
-  print(typ)
-  # if the input object is not a matrix or a dataframe stop
-  if(typ != 'SpatialLinesDataFrame' & typ != 'SpatialLines'){
-    stop("The input vector must be of type 'SpatialLinesDataFrame' or 'SpatialLines!", call.=FALSE)
+
+  # if the input object is not a spatial object stop
+  if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints' &
+       typ != 'SpatialLinesDataFrame' & typ != 'SpatialLines'&
+       typ != 'SpatialPolygonDataFrame' & typ != 'SpatialPolygons'){
+    stop("The input object must be of type SpatialXXXXX(DataFrame)", call.=FALSE)
   }
   
   if(is.null(newobj)){
@@ -64,7 +69,6 @@ ds.gBuffer = function(input=NULL, by_id=FALSE, ip_width=NULL, newobj=NULL, datas
   for(i in 1:length(datasources)){
     message(paste0("--Creating buffer on geometry for ", names(datasources)[i], "..."))
     cally <- paste0("gBufferDS(", input,",",by_id,",",ip_width,")")
-    print(cally)
     datashield.assign(datasources[i], newobj, as.symbol(cally))
     
     # check that the new object has been created and display a message accordingly

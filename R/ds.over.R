@@ -5,10 +5,8 @@
 #' at the spatial locations of object x retrieves the indexes or attributes from spatial 
 #' object y
 #' @details See the \code{over()} function from sp package for more details
-#' @param x name of an object on the server side of class "SpatialPointsDataFrame" 
-#' or "SpatialPoints" for which the epsg coordinate system will be transformed
-#' @param x geometry (locations) of the queries
-#' @param y layer from which the geometries or attributes are queried
+#' @param x geometry (locations) of the queries (spatial object)
+#' @param y layer from which the geometries or attributes are queried (spatial object)
 #' @param newobj a character, the name of the new object which will be created
 #' If no name is specified the default name is the name of the original data frame 
 #' followed by the suffix '.over'.
@@ -28,7 +26,7 @@
 #' 
 #' }
 #' 
-ds.over = function(x=NULL, y=NULL, newobj=NULL, datasources=NULL) {
+ds.over = function(x=NULL, y=NULL, fn=NULL, returnList=FALSE, newobj=NULL, datasources=NULL) {
   
   # if no opal login details are provided look for 'opal' objects in the environment
   if(is.null(datasources)){
@@ -52,11 +50,19 @@ ds.over = function(x=NULL, y=NULL, newobj=NULL, datasources=NULL) {
   
   # call the internal function that checks the input object is of the same class in all studies.
   typ <- checkClass(datasources, x)
-  
-  # if the input object is not a matrix or a dataframe stop
-#   if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints'){
-#     stop("The input vector must be of type 'SpatialPointsDataFrame'!", call.=FALSE)
-#   }
+  typ2 <- checkClass(datasources, y)
+  # if the input object is not a spatial object stop
+  if(typ != 'SpatialPointsDataFrame' & typ != 'SpatialPoints' &
+       typ != 'SpatialLinesDataFrame' & typ != 'SpatialLines'&
+       typ != 'SpatialPolygonsDataFrame' & typ != 'SpatialPolygons'){
+    stop("The input object must be of type SpatialXXXXX(DataFrame)", call.=FALSE)
+  }
+  # if the input object is not a spatial object stop
+  if(typ2 != 'SpatialPointsDataFrame' & typ2 != 'SpatialPoints' &
+       typ2 != 'SpatialLinesDataFrame' & typ2 != 'SpatialLines'&
+       typ2 != 'SpatialPolygonsDataFrame' & typ2 != 'SpatialPolygons'){
+    stop("The input object must be of type SpatialXXXXX(DataFrame)", call.=FALSE)
+  }
   
   if(is.null(newobj)){
     newobj <- paste0(x,".over")
@@ -65,7 +71,13 @@ ds.over = function(x=NULL, y=NULL, newobj=NULL, datasources=NULL) {
   # call the server side function and do the replacement for each server
   for(i in 1:length(datasources)){
     message(paste0("--Overlaying geometries on ", names(datasources)[i], "..."))
-    cally <- paste0("overDS(", x,",",y,")")
+    if (!is.null(fn)){
+     fnStr <- paste0(", ",fn) 
+    }
+    else {
+      fnStr <- ", NULL"
+    }
+    cally <- paste0("overDS(", x,",",y,",", returnList, fnStr,")")
     datashield.assign(datasources[i], newobj, as.symbol(cally))
     
     # check that the new object has been created and display a message accordingly

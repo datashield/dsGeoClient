@@ -8,8 +8,7 @@ ds.gBuffer(input = NULL, by_id = FALSE, ip_width = NULL, newobj = NULL,
   datasources = NULL)
 }
 \arguments{
-\item{input}{name of an object on the server side of class "SpatialLinesDataFrame"
-or "SpatialLines" to which the buffer will be applied}
+\item{input}{name of a spatial object on the server side to which the buffer will be applied}
 
 \item{by_id}{Logical determining if the function should be applied across subgeometries
 (TRUE) or the entire object (FALSE)}
@@ -42,10 +41,6 @@ See the \code{gBuffer()} function from rgeos package for more details
 \examples{
 {
 
-# Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
-# The coordinate system 29902 is the code for Ireland
-
-ds.spTransform('mySPframe',29902)
 
 }
 }
