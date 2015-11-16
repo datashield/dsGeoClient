@@ -50,6 +50,54 @@ a vector indicating which of an individual's points fell inside their polygon.
 \examples{
 {
 
+# Load log in data
+
+data(GEOSPATIAL_logindata)
+
+# login
+# (by default the assigned dataset is a dataframe named 'D')
+opals <- datashield.login(logins=GEOSPATIAL_logindata,assign=TRUE)
+
+# set up additional objects needed for the example
+
+datashield.assign(opals, symbol="work", value="GEOSPATIAL.GPS_work")
+datashield.assign(opals, symbol="home", value="GEOSPATIAL.GPS_home")
+
+# Convert points data to a SpatialPointsDataFrame
+
+ds.coordinates('D',coords=c('Lon','Lat'),newobj='journeys')
+ds.coordinates('work',coords=c('Lon','Lat'),newobj='work')
+ds.coordinates('home',coords=c('Lon','Lat'),newobj='home')
+
+#set up coordinate systems
+
+ds.proj4string('journeys',4326,'journeys')
+ds.proj4string('work',4326,'work')
+ds.proj4string('home',4326,'home')
+
+ds.spTransform('journeys',29902,'journeys')
+ds.spTransform('work',29902,'work')
+ds.spTransform('home',29902,'home')
+
+#Create buffer around point locations
+
+ds.gBuffer('work',by_id=T,ip_width=150,'work_buffer')
+ds.gBuffer('home',by_id=T,ip_width=150,'home_buffer')
+
+# Overlay the locations with the journeys with the home and work locations.
+# We then use the overMatch function to only count matches when the ID of the
+# location and journey are the same so that we only consider when individuals
+# making the journey are at their own home or work and not any one else's
+
+ds.over('journeys', 'home_buffer',returnList=T,newobj='home_over')
+ds.overMatch('journeys','person_id','home_over','person_id',newobj='res_home')
+
+ds.over('journeys', 'work_buffer',returnList=T,newobj='work_over')
+ds.overMatch('journeys','person_id','work_over','person_id',newobj='res_work')
+
+
+
+
 # Return a vector indicating that an individual's journey passed through the
 # polygon that was assigned to them (e.g. they came within a certain distance)
 # of a point

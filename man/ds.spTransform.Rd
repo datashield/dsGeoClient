@@ -37,10 +37,29 @@ See the \code{spTransform()} function from sp package for more details
 \examples{
 {
 
+# Load log in data
+
+data(GEOSPATIAL_logindata)
+
+# login
+# (by default the assigned dataset is a dataframe named 'D')
+opals <- datashield.login(logins=GEOSPATIAL_logindata,assign=TRUE)
+
+# Convert data frame D to a SpatialPointsDataFrame
+# Data frame D has columns Lon and Lat which contain the coordinates
+
+myvect <- c("Lon","Lat")
+ds.coordinates('D',myvect, newobj='coords')
+
+# Assign epsg coordinate system to a SpatialPointsDataFrame called mySPframe
+# The coordinate system 4326 is the code for WGS84 (GPS)
+
+ds.proj4string('coords',4326,'mySPframe')
+
 # Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
 # The coordinate system 29902 is the code for Ireland
 
-ds.spTransform('mySPframe',29902)
+ds.spTransform('mySPframe',29902,'transformed')
 
 }
 }

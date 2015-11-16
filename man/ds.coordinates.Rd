@@ -40,11 +40,19 @@ See the \code{coordinates()} function from sp package for more details
 \examples{
 {
 
+# Load log in data
+
+data(GEOSPATIAL_logindata)
+
+# login
+# (by default the assigned dataset is a dataframe named 'D')
+opals <- datashield.login(logins=GEOSPATIAL_logindata,assign=TRUE)
+
 # Convert data frame D to a SpatialPointsDataFrame
 # Data frame D has columns Lon and Lat which contain the coordinates
 
 myvect <- c("Lon","Lat")
-ds.coordinates('D',myvect)
+ds.coordinates('D',myvect,newobj='coords')
 
 }
 }
