@@ -18,11 +18,60 @@
 #' @export
 #' @examples {
 #' 
-#' # Return the points of interest that fall within each region in a new object 'res'
-#' # 'my_regions' consists of several regions defined in a SpatialPolygonDataFrame
-#' # 'my_poi' consists of points of interest in a SpatialPointsDataFrame
 #' 
-#' ds.over(x='my_regions',y='my_poi',newobj='res')
+#' 
+#' # Load log in data
+#' 
+#' data(GEOSPATIAL_logindata)
+#' 
+#' # login 
+#' # (by default the assigned dataset is a dataframe named 'D')
+#' opals <- datashield.login(logins=GEOSPATIAL_logindata,assign=TRUE)
+#' 
+#' # Convert data frame D to a SpatialPointsDataFrame
+#' # Data frame D has columns Lon and Lat which contain the coordinates
+#' 
+#' myvect <- c("Lon","Lat")
+#' ds.coordinates('D',myvect, newobj='coords')
+#' 
+#' # Assign epsg coordinate system to a SpatialPointsDataFrame called mySPframe
+#' # The coordinate system 4326 is the code for WGS84 (GPS)
+#' 
+#' ds.proj4string('coords',4326,'mySPframe')
+#' 
+#' # Transform epsg coordinate system for a SpatialPointsDataFrame called mySPframe
+#' # The coordinate system 29902 is the code for Ireland
+#' 
+#' ds.spTransform('mySPframe',29902,'transformed')
+#' 
+#' # Transform groups of points in a SpatialPointsDataFrame called transformed into lines
+#' # The points in the data frame are grouped by an idenifier in a column called id
+#' 
+#' ds.coordsToLines('transformed','person_id',newobj='my_lines')
+#' 
+#' # Set a buffer of 150 around points contained in the bus_work object
+#' # Buffer is created per id in the bus_work object
+#' 
+#' ds.gBuffer('my_lines',by_id=T,ip_width=150,'my_buffer')
+#' 
+#' #Now need to assign another table containing some locations to use the over function
+#' 
+#' datashield.assign(opals, symbol='locations', value='GEOSPATIAL.GPS_location')
+#' 
+#' #assign the correct projection to the buffer object
+#' ds.proj4string('my_buffer', 29902, 'my_buffer')
+#'
+#' #Convert the standard data frame to points, set the projection and transform
+#' #for the locations
+#'
+#' ds.coordinates('locations',c('Lon','Lat'), newobj='locations')
+#'
+#' ds.proj4string('locations', 4326, 'locations')
+#' ds.spTransform('locations', 29902, 'locations')
+#'
+#' #Overlay the buffered regions and locations returning a count of matches
+#' #where the locations fall inside the buffer
+#' ds.over('my_buffer','locations',fn='length',returnList=F,'res')
 #' 
 #' }
 #' 

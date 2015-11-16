@@ -29,13 +29,66 @@
 #' @export
 #' @examples {
 #' 
-#' # bus_out is a SpatialPointsDataFrame with 2 columns in the data frame called
-#' # res_home and res_work representing home and work. These columns are 1 or 0 
-#' # depending on whether the individual is at that location or not. The data
-#' # also contains many rows (i.e. points in a journey) per individual which are
-#' # grouped by the bus_id column.
 #' 
-#' ds.commute('bus_out', 'bus_id', 'res_home', 'res_work', 'bus_comm')
+#' #' # Load log in data
+#' 
+#' data(GEOSPATIAL_logindata)
+#' 
+#' # login 
+#' # (by default the assigned dataset is a dataframe named 'D')
+#' opals <- datashield.login(logins=GEOSPATIAL_logindata,assign=TRUE)
+#' 
+#' # set up additional objects needed for the example
+#' 
+#' datashield.assign(opals, symbol="work", value="GEOSPATIAL.GPS_work")
+#' datashield.assign(opals, symbol="home", value="GEOSPATIAL.GPS_home")
+#' 
+#' # Convert points data to a SpatialPointsDataFrame
+#' 
+#' ds.coordinates('D',coords=c('Lon','Lat'),newobj='journeys')
+#' ds.coordinates('work',coords=c('Lon','Lat'),newobj='work')
+#' ds.coordinates('home',coords=c('Lon','Lat'),newobj='home')
+#'
+#' #set up coordinate systems
+#'
+#' ds.proj4string('journeys',4326,'journeys')
+#' ds.proj4string('work',4326,'work')
+#' ds.proj4string('home',4326,'home')
+#' 
+#' ds.spTransform('journeys',29902,'journeys')
+#' ds.spTransform('work',29902,'work')
+#' ds.spTransform('home',29902,'home')
+#' 
+#' #Create buffer around point locations
+#'
+#' ds.gBuffer('work',by_id=T,ip_width=150,'work_buffer')
+#' ds.gBuffer('home',by_id=T,ip_width=150,'home_buffer')
+#'
+#' # Overlay the locations with the journeys with the home and work locations.
+#' # We then use the overMatch function to only count matches when the ID of the
+#' # location and journey are the same so that we only consider when individuals
+#' # making the journey are at their own home or work and not any one else's.
+#' # Thus the output vectors contain an indicator showing whether the individual
+#' # was at home or work
+#'
+#' ds.over('journeys', 'home_buffer',returnList=T,newobj='home_over')
+#' ds.overMatch('journeys','person_id','home_over','person_id',newobj='res_home')
+#' 
+#' ds.over('journeys', 'work_buffer',returnList=T,newobj='work_over')
+#' ds.overMatch('journeys','person_id','work_over','person_id',newobj='res_work')
+#'
+#' # Create a data frame with the data created above, with the indicator for the
+#' # individual's home and work. These data are grouped by the person_id column
+#'   
+#' ds.dataframe(x=c('D$person_id','res_home','res_work'),'commute_input')
+#' 
+#' # The commute function determines whether a journeys are between two locations
+#' # that are indicated by two columns in the input dataframe. In this case the
+#' # locations are the home and work of several individuals. The output is a vector
+#' # of indicators showing that the individual is travelling between the two
+#' # locations of interest
+#' 
+#' ds.commute('commute_input', 'person_id', 'res_home', 'res_work', 'commute_out')
 #' 
 #' }
 #' 
