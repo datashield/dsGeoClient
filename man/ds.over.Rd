@@ -98,7 +98,7 @@ ds.spTransform('locations', 29902, 'locations')
 
 #Overlay the buffered regions and locations returning a count of matches
 #where the locations fall inside the buffer
-ds.over('my_buffer','locations',fn='length',returnList=F,'res')
+ds.over('my_buffer','locations',fn='length',returnList=FALSE,'res')
 
 }
 }
