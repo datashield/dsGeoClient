@@ -58,7 +58,7 @@
 #' # Set a buffer of 150 around points contained in the bus_work object
 #' # Buffer is created per id in the bus_work object
 #' 
-#' ds.gBuffer('my_lines',by_id=,ip_width=150,'my_buffer')
+#' ds.gBuffer('my_lines',by_id=TRUE,ip_width=150,'my_buffer')
 #' 
 #' #Now need to assign another table containing some locations to use the over function
 #' 
