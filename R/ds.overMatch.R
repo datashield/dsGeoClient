@@ -74,22 +74,8 @@
 #' ds.over('journeys', 'work_buffer',returnList=TRUE,newobj='work_over')
 #' ds.overMatch('journeys','person_id','work_over','person_id',newobj='res_work')
 #' 
-#' 
-#' 
-#' 
-#' # Return a vector indicating that an individual's journey passed through the
-#' # polygon that was assigned to them (e.g. they came within a certain distance)
-#' # of a point
-#' 
-#' # set up overlay
-#' ds.over(x='my_journeys',y='my_polygons',returnList=TRUE, newobj='res')
-#' 
-#' # Analyse overlay to see if individual ids match polygon ids to give a positive
-#' # match
-#' 
-#' ds.overMatch(x='my_journeys',x_id='ids',over_out='res',y_id='ids', newobj='matches')
 #' }
-#' 
+
 ds.overMatch = function(x=NULL, x_id=NULL, over_out=NULL, y_id=NULL,
                          newobj=NULL, datasources=NULL) {
   
