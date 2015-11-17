@@ -61,8 +61,8 @@
 #' 
 #' #Create buffer around point locations
 #'
-#' ds.gBuffer('work',by_id=T,ip_width=150,'work_buffer')
-#' ds.gBuffer('home',by_id=T,ip_width=150,'home_buffer')
+#' ds.gBuffer('work',by_id=TRUE,ip_width=150,'work_buffer')
+#' ds.gBuffer('home',by_id=TRUE,ip_width=150,'home_buffer')
 #'
 #' # Overlay the locations with the journeys with the home and work locations.
 #' # We then use the overMatch function to only count matches when the ID of the
@@ -71,10 +71,10 @@
 #' # Thus the output vectors contain an indicator showing whether the individual
 #' # was at home or work
 #'
-#' ds.over('journeys', 'home_buffer',returnList=T,newobj='home_over')
+#' ds.over('journeys', 'home_buffer',returnList=TRUE,newobj='home_over')
 #' ds.overMatch('journeys','person_id','home_over','person_id',newobj='res_home')
 #' 
-#' ds.over('journeys', 'work_buffer',returnList=T,newobj='work_over')
+#' ds.over('journeys', 'work_buffer',returnList=TRUE,newobj='work_over')
 #' ds.overMatch('journeys','person_id','work_over','person_id',newobj='res_work')
 #'
 #' # Create a data frame with the data created above, with the indicator for the
