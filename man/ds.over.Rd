@@ -12,6 +12,14 @@ ds.over(x = NULL, y = NULL, fn = NULL, returnList = FALSE,
 
 \item{y}{layer from which the geometries or attributes are queried (spatial object)}
 
+\item{fn}{for certain geometry combinations (e.g. points and polygon data frames)
+apply a function to the attributes to the locations (x). See  \code{over()} function from sp!}
+
+\item{returnList}{if FALSE, a data.frame with number of rows equal to
+length(x) is returned, if it is TRUE a list with length(x) elements is returned,
+with a list element the data.frame elements of all geometries in y that correspond to that
+element of x}
+
 \item{newobj}{a character, the name of the new object which will be created
 If no name is specified the default name is the name of the original data frame
 followed by the suffix '.over'.}
@@ -71,7 +79,7 @@ ds.coordsToLines('transformed','person_id',newobj='my_lines')
 # Set a buffer of 150 around points contained in the bus_work object
 # Buffer is created per id in the bus_work object
 
-ds.gBuffer('my_lines',by_id=T,ip_width=150,'my_buffer')
+ds.gBuffer('my_lines',by_id=,ip_width=150,'my_buffer')
 
 #Now need to assign another table containing some locations to use the over function
 

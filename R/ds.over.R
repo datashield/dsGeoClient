@@ -7,6 +7,12 @@
 #' @details See the \code{over()} function from sp package for more details
 #' @param x geometry (locations) of the queries (spatial object)
 #' @param y layer from which the geometries or attributes are queried (spatial object)
+#' @param fn for certain geometry combinations (e.g. points and polygon data frames)
+#'  apply a function to the attributes to the locations (x). See  \code{over()} function from sp!
+#' @param returnList if FALSE, a data.frame with number of rows equal to
+#' length(x) is returned, if it is TRUE a list with length(x) elements is returned, 
+#' with a list element the data.frame elements of all geometries in y that correspond to that
+#' element of x
 #' @param newobj a character, the name of the new object which will be created
 #' If no name is specified the default name is the name of the original data frame 
 #' followed by the suffix '.over'.
